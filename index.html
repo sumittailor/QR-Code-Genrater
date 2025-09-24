@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online barcode generator tool. Create custom barcodes in various formats and sizes for your business needs.">
+    <meta name="keywords" content="barcode generator, QR code, barcode creator, online barcode tool, 2D codes, GS1 DataBar">
+    <title>Barcode Generator - Create Custom Barcodes Online</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background-color: white;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #666;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .generator-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .barcode-preview {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #barcode {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        #qrcode {
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        
+        .barcode-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .download-btn {
+            background-color: var(--success-color);
+        }
+        
+        .download-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .ad-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-placeholder {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .info-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .info-box h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .format-info {
+            background-color: #fff9e6;
+            border-left: 4px solid var(--warning-color);
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.9rem;
+        }
+        
+        .error-message {
+            color: var(--accent-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .preview-placeholder {
+            color: #999;
+            font-style: italic;
+            padding: 2rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #555;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+                grid-template-columns: 1fr 1fr;
+                display: grid;
+                gap: 1rem;
+            }
+            
+            .ad-container {
+                min-height: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 0.75rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .barcode-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .generator-container {
+                padding: 1.5rem;
+            }
+            
+            .hero {
+                padding: 2rem 0;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">BarcodeGen Pro</div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#generator">Generator</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Advanced Barcode Generator</h1>
+            <p>Create custom barcodes in various formats including 2D codes and GS1 DataBar for your business, inventory, or personal use. No registration required!</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="generator-container" id="generator">
+                <h2>Generate Your Barcode</h2>
+                <form id="barcode-form">
+                    <div class="form-group">
+                        <label for="barcode-data">Enter Barcode Data:</label>
+                        <input type="text" id="barcode-data" placeholder="Enter text, numbers, or URL" value="https://hpanel.hostinger.com/domains" required>
+                        <div class="error-message" id="data-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="barcode-type">Barcode Type:</label>
+                        <select id="barcode-type">
+                            <optgroup label="1D Barcodes">
+                                <option value="CODE128">CODE128</option>
+                                <option value="CODE39">CODE39</option>
+                                <option value="EAN13">EAN-13</option>
+                                <option value="EAN8">EAN-8</option>
+                                <option value="UPC">UPC</option>
+                                <option value="ITF14">ITF-14</option>
+                                <option value="MSI">MSI</option>
+                                <option value="pharmacode">Pharmacode</option>
+                                <option value="codabar">Codabar</option>
+                            </optgroup>
+                            <optgroup label="2D Codes">
+                                <option value="QRCODE" selected>QR Code</option>
+                            </optgroup>
+                            <optgroup label="GS1 DataBar">
+                                <option value="GS1DATABAR">GS1 DataBar (RSS-14)</option>
+                            </optgroup>
+                        </select>
+                        <div class="format-info" id="format-info">
+                            QR Code supports text, URLs, contact info, and more. Can store up to 4,296 alphanumeric characters.
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="barcode-size">Barcode Size:</label>
+                        <select id="barcode-size">
+                            <option value="1">Small</option>
+                            <option value="1.5" selected>Medium</option>
+                            <option value="2">Large</option>
+                            <option value="2.5">Extra Large</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" id="generate-btn">Generate Barcode</button>
+                </form>
+                
+                <div class="barcode-preview">
+                    <h3>Barcode Preview</h3>
+                    <svg id="barcode" style="display: none;"></svg>
+                    <div id="qrcode"></div>
+                    <div class="barcode-actions">
+                        <button id="download-svg" class="download-btn">Download as SVG</button>
+                        <button id="download-png" class="download-btn">Download as PNG</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="ad-container">
+                    <!-- AdSense Ad Unit -->
+                    <div class="ad-placeholder">
+                        <p>Advertisement Space</p>
+                        <p>Ad Unit ID: <span id="ad-unit-id">INSERT_AD_UNIT_ID_HERE</span></p>
+                        <p>AdSense ad will be displayed here</p>
+                    </div>
+                </div>
+                
+                <div class="ad-container">
+                    <!-- Second Ad Unit -->
+                    <div class="ad-placeholder">
+                        <p>Advertisement Space</p>
+                        <p>Ad Unit ID: <span id="ad-unit-id-2">INSERT_AD_UNIT_ID_HERE</span></p>
+                        <p>AdSense ad will be displayed here</p>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Barcode Tips</h3>
+                    <p>• CODE128 is the most versatile format and supports alphanumeric characters</p>
+                    <p>• QR Codes can store more data including URLs and contact information</p>
+                    <p>• GS1 DataBar is used for small items where space is limited</p>
+                    <p>• For smaller barcodes, use the "Small" size option</p>
+                    <p>• Ensure your barcode data matches the format requirements</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BarcodeGen Pro</h3>
+                    <p>Free online barcode generator tool for all your needs.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#generator">Generator</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Barcode Formats</h3>
+                    <ul>
+                        <li><a href="#">1D Barcodes</a></li>
+                        <li><a href="#">2D Codes</a></li>
+                        <li><a href="#">GS1 DataBar</a></li>
+                        <li><a href="#">All Formats</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 BarcodeGen Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generate-btn');
+            const barcodeData = document.getElementById('barcode-data');
+            const barcodeType = document.getElementById('barcode-type');
+            const barcodeSize = document.getElementById('barcode-size');
+            const barcodeSvg = document.getElementById('barcode');
+            const qrcodeDiv = document.getElementById('qrcode');
+            const downloadSvgBtn = document.getElementById('download-svg');
+            const downloadPngBtn = document.getElementById('download-png');
+            const dataError = document.getElementById('data-error');
+            const formatInfo = document.getElementById('format-info');
+            
+            // Format requirements for each barcode type
+            const formatRequirements = {
+                'CODE128': 'Supports alphanumeric characters. Most versatile format.',
+                'CODE39': 'Supports uppercase letters (A-Z), digits (0-9), and special characters (-, ., $, /, +, %, space).',
+                'EAN13': 'Must be exactly 12 or 13 digits. Used for retail products.',
+                'EAN8': 'Must be exactly 7 or 8 digits. Used for small retail items.',
+                'UPC': 'Must be exactly 11 or 12 digits. Used for retail products in North America.',
+                'ITF14': 'Must be exactly 13 or 14 digits. Used for shipping cartons.',
+                'MSI': 'Numeric only. Used for inventory management.',
+                'pharmacode': 'Numeric only (0-9). Used for pharmaceutical packaging.',
+                'codabar': 'Supports digits (0-9) and special characters (-, $, :, /, ., +). Used in libraries and blood banks.',
+                'QRCODE': 'Supports text, URLs, contact info, and more. Can store up to 4,296 alphanumeric characters.',
+                'GS1DATABAR': 'Supports 14 digits. Used for small items where space is limited.'
+            };
+            
+            // Validation functions for each barcode type
+            const validators = {
+                'CODE128': (data) => {
+                    return data.length > 0;
+                },
+                'CODE39': (data) => {
+                    const regex = /^[A-Z0-9\-\.\$\+\/% ]+$/;
+                    return regex.test(data);
+                },
+                'EAN13': (data) => {
+                    const regex = /^\d{12,13}$/;
+                    return regex.test(data);
+                },
+                'EAN8': (data) => {
+                    const regex = /^\d{7,8}$/;
+                    return regex.test(data);
+                },
+                'UPC': (data) => {
+                    const regex = /^\d{11,12}$/;
+                    return regex.test(data);
+                },
+                'ITF14': (data) => {
+                    const regex = /^\d{13,14}$/;
+                    return regex.test(data);
+                },
+                'MSI': (data) => {
+                    const regex = /^\d+$/;
+                    return regex.test(data);
+                },
+                'pharmacode': (data) => {
+                    const regex = /^\d+$/;
+                    return regex.test(data) && parseInt(data) >= 3 && parseInt(data) <= 131070;
+                },
+                'codabar': (data) => {
+                    const regex = /^[0-9\-\$\:\.\/\+]+$/;
+                    return regex.test(data);
+                },
+                'QRCODE': (data) => {
+                    return data.length > 0;
+                },
+                'GS1DATABAR': (data) => {
+                    const regex = /^\d{14}$/;
+                    return regex.test(data);
+                }
+            };
+            
+            // Update format info when barcode type changes
+            barcodeType.addEventListener('change', function() {
+                const selectedType = this.value;
+                formatInfo.textContent = formatRequirements[selectedType];
+                dataError.style.display = 'none';
+                
+                // Show/hide QR code container based on selection
+                if (selectedType === 'QRCODE') {
+                    qrcodeDiv.style.display = 'block';
+                    barcodeSvg.style.display = 'none';
+                } else {
+                    qrcodeDiv.style.display = 'none';
+                    barcodeSvg.style.display = 'block';
+                }
+            });
+            
+            // Generate QR Code function
+            function generateQRCode(data, size) {
+                try {
+                    // Clear previous QR code
+                    qrcodeDiv.innerHTML = '';
+                    
+                    // Calculate QR code size based on selected size
+                    const qrSize = Math.min(200 + (size * 50), 400);
+                    
+                    // Generate QR code
+                    const typeNumber = 0; // Auto detect type
+                    const errorCorrectionLevel = 'L'; // Low error correction
+                    
+                    const qr = qrcode(typeNumber, errorCorrectionLevel);
+                    qr.addData(data);
+                    qr.make();
+                    
+                    // Create QR code image
+                    const qrImg = qr.createImgTag(5, 0); // 5 is the cell size, 0 is the margin
+                    qrcodeDiv.innerHTML = qrImg;
+                    
+                    // Adjust the size of the QR code
+                    const img = qrcodeDiv.querySelector('img');
+                    if (img) {
+                        img.style.width = qrSize + 'px';
+                        img.style.height = qrSize + 'px';
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('QR Code generation error:', error);
+                    return false;
+                }
+            }
+            
+            // Generate barcode function
+            function generateBarcode() {
+                const data = barcodeData.value.trim();
+                const type = barcodeType.value;
+                const size = parseFloat(barcodeSize.value);
+                
+                // Hide previous error
+                dataError.style.display = 'none';
+                
+                if (!data) {
+                    dataError.textContent = 'Please enter barcode data';
+                    dataError.style.display = 'block';
+                    return;
+                }
+                
+                // Validate data based on barcode type
+                const validator = validators[type];
+                if (!validator(data)) {
+                    dataError.textContent = `Invalid data format for ${type}. ${formatRequirements[type]}`;
+                    dataError.style.display = 'block';
+                    return;
+                }
+                
+                try {
+                    if (type === 'QRCODE') {
+                        // Generate QR Code
+                        const success = generateQRCode(data, size);
+                        if (!success) {
+                            throw new Error('Failed to generate QR code');
+                        }
+                    } else if (type === 'GS1DATABAR') {
+                        // Generate GS1 DataBar (using CODE128 as base with GS1 formatting)
+                        JsBarcode(barcodeSvg, data, {
+                            format: 'CODE128',
+                            width: size,
+                            height: 80 * size,
+                            displayValue: true,
+                            fontSize: 16 * size,
+                            margin: 10,
+                            ean128: true // Enable GS1-128 mode
+                        });
+                    } else {
+                        // Generate standard 1D barcode
+                        JsBarcode(barcodeSvg, data, {
+                            format: type,
+                            width: size,
+                            height: 80 * size,
+                            displayValue: true,
+                            fontSize: 16 * size,
+                            margin: 10
+                        });
+                    }
+                } catch (error) {
+                    dataError.textContent = 'Error generating barcode: ' + error.message;
+                    dataError.style.display = 'block';
+                    console.error(error);
+                }
+            }
+            
+            // Download as SVG
+            function downloadSvg() {
+                const type = barcodeType.value;
+                
+                if (type === 'QRCODE') {
+                    // For QR Code, we need to convert to SVG
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = qrcodeDiv.querySelector('img');
+                    
+                    if (!img) {
+                        alert('Please generate a QR code first');
+                        return;
+                    }
+                    
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        
+                        const imgData = canvas.toDataURL('image/png');
+                        const a = document.createElement('a');
+                        a.href = imgData;
+                        a.download = 'qrcode.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+                    
+                    // Trigger onload if image is already loaded
+                    if (img.complete) {
+                        img.onload();
+                    }
+                } else {
+                    // For other barcodes, use the SVG directly
+                    const svgData = new XMLSerializer().serializeToString(barcodeSvg);
+                    const blob = new Blob([svgData], { type: 'image/svg+xml' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'barcode.svg';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            }
+            
+            // Download as PNG
+            function downloadPng() {
+                const type = barcodeType.value;
+                
+                if (type === 'QRCODE') {
+                    // For QR Code, create a canvas and convert to PNG
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = qrcodeDiv.querySelector('img');
+                    
+                    if (!img) {
+                        alert('Please generate a QR code first');
+                        return;
+                    }
+                    
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        
+                        const pngUrl = canvas.toDataURL('image/png');
+                        const a = document.createElement('a');
+                        a.href = pngUrl;
+                        a.download = 'qrcode.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+                    
+                    // Trigger onload if image is already loaded
+                    if (img.complete) {
+                        img.onload();
+                    }
+                } else {
+                    // For other barcodes, convert SVG to PNG
+                    const svgData = new XMLSerializer().serializeToString(barcodeSvg);
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        
+                        const pngUrl = canvas.toDataURL('image/png');
+                        const a = document.createElement('a');
+                        a.href = pngUrl;
+                        a.download = 'barcode.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+                    
+                    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+                }
+            }
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateBarcode);
+            downloadSvgBtn.addEventListener('click', downloadSvg);
+            downloadPngBtn.addEventListener('click', downloadPng);
+            
+            // Generate a sample QR code on page load with the URL
+            generateBarcode();
+        });
+    </script>
+</body>
+</html>
